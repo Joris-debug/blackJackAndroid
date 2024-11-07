@@ -16,8 +16,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.blackjack.ui.theme.BlackjackTheme
 import com.example.blackjack.ui.navigation.BottomNavigationBar
 import com.example.blackjack.ui.navigation.NavHost
+import dagger.hilt.EntryPoint
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
