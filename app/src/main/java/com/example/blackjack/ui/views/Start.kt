@@ -10,17 +10,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.blackjack.ui.views.models.MainViewModel
+import com.example.blackjack.ui.views.models.StartViewModel
 
 @Composable
-fun Start(modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewModel()) {
+fun Start(modifier: Modifier = Modifier, viewModel: StartViewModel = hiltViewModel()) {
     val viewState = viewModel.uiStateFlow.collectAsState().value
 
     LazyColumn(
-        modifier = modifier.padding(16.dp) // Padding für die gesamte LazyColumn
+        modifier = modifier.padding(16.dp)
     ) {
         item {
             Text(
@@ -57,7 +56,7 @@ fun Start(modifier: Modifier = Modifier, viewModel: MainViewModel = hiltViewMode
                         modifier = modifier
                     )
                     val identifier = LocalContext.current.resources.
-                        getIdentifier("img_${cardCode.lowercase()}.png", "drawable", LocalContext.current.packageName)
+                        getIdentifier("img_${cardCode.lowercase()}", "drawable", LocalContext.current.packageName)
 
                     if(identifier != 0) {
                         Image(
