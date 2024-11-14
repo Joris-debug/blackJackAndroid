@@ -5,6 +5,7 @@ plugins {
 
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-kapt")
 }
 
 android {
@@ -19,6 +20,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
 
     buildTypes {
@@ -92,9 +94,17 @@ dependencies {
     //Hilt Workers
     implementation("androidx.work:work-runtime-ktx:2.10.0")
     kapt("androidx.hilt:hilt-compiler:1.2.0")
+
     //Moshi
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.moshi:moshi:1.13.0")
     implementation("com.squareup.moshi:moshi-kotlin:1.13.0")
+
+    // Database
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    annotationProcessor("androidx.room:room-compiler:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
 }

@@ -1,9 +1,11 @@
 package com.example.blackjack.di
 
 import android.content.Context
+import androidx.room.Room
 import androidx.work.WorkManager
 import com.squareup.moshi.Moshi
 import com.example.blackjack.api.DeckOfCardsApi
+import com.example.blackjack.data.database.GameDatabase
 import com.example.blackjack.data.repositories.CardDeckRepository
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -24,8 +26,8 @@ object repomodule {
 
     @Singleton
     @Provides
-    fun providesCardDeckRepository(api: DeckOfCardsApi): CardDeckRepository {
-        return CardDeckRepository(api)
+    fun providesCardDeckRepository(api: DeckOfCardsApi, gameDb: GameDatabase): CardDeckRepository {
+        return CardDeckRepository(api, gameDb.gameDao)
     }
 
     @Provides
@@ -49,6 +51,12 @@ object repomodule {
         return retrofit.create(DeckOfCardsApi::class.java)
     }
 
+    @Provides
+    fun providesDatabase(@ApplicationContext context: Context): GameDatabase {
+        return Room.databaseBuilder(
+            context, GameDatabase::class.java, "gamedatabase"
+        ).build()
+    }
 
     @Provides
     fun providesWorkmanager(@ApplicationContext context: Context): WorkManager {

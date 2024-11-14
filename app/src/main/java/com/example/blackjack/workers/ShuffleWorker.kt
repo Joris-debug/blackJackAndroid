@@ -9,16 +9,14 @@ import dagger.assisted.AssistedInject
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.blackjack.data.repositories.CardDeckRepository
-import com.example.blackjack.ui.views.models.StartViewModel
 import kotlinx.coroutines.coroutineScope
-import javax.inject.Inject
 
 
 @HiltWorker
 class ShuffleWorker @AssistedInject constructor(
-    @Assisted context: Context,                          // Kontext über den Standardkonstruktor
-    @Assisted workerParams: WorkerParameters,            // WorkerParameters ebenfalls injizieren
-    val cardDeckRepository: CardDeckRepository  // Abhängigkeit injizieren
+    @Assisted context: Context,
+    @Assisted workerParams: WorkerParameters,
+    val cardDeckRepository: CardDeckRepository
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {
@@ -27,9 +25,8 @@ class ShuffleWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         coroutineScope {
-            Log.d(TAG, "klappt")
-            val deck = cardDeckRepository.createNewDeck()
-            Log.d(TAG, "Deck ID is ${deck.deckId}")
+            Log.d(TAG, "Worker routine successfully started")
+            cardDeckRepository.createNewDeck()
         }
         return Result.success()
     }

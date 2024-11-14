@@ -13,6 +13,8 @@ import com.example.blackjack.workers.ShuffleWorker
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -28,18 +30,17 @@ class StartViewModel @Inject constructor(
     val uiStateFlow: StateFlow<StartViewState> = _uiStateFlow
 
     init {
-        //createNewDeck()
+        createNewDeck()
         startWork()
     }
 
     fun createNewDeck() {
         viewModelScope.launch {
-            val deckData = cardDeckRepository.createNewDeck()
+            cardDeckRepository.createNewDeck()
+            val daoFlow = cardDeckRepository.gameFlow.first()
             _uiStateFlow.value = _uiStateFlow.value.copy(
-                success = deckData.success,
-                deckId = deckData.deckId,
-                remaining = deckData.remaining,
-                shuffled = deckData.shuffled
+                deckId = daoFlow.deckId,
+                success = daoFlow.success
             )
         }
     }
@@ -58,14 +59,17 @@ class StartViewModel @Inject constructor(
     }
 
     fun startWork() {
-        val shuffleWorkRequest = OneTimeWorkRequestBuilder<ShuffleWorker>().build()
+        val shuffleWorkRequest = PeriodicWorkRequestBuilder<ShuffleWorker>(15, TimeUnit.MINUTES)
+            .build()
 
-        workManager.enqueueUniqueWork(
+        workManager.enqueueUniquePeriodicWork(
             WORK_KEY,
-            ExistingWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.UPDATE,
             shuffleWorkRequest
         )
     }
+
+
 
     fun stopWork() {
         workManager.cancelUniqueWork(WORK_KEY)
